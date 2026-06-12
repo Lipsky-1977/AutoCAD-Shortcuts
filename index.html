@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AutoCAD 2027 快捷键查询</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><rect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%232a2a2a%27/><text x=%2716%27 y=%2722%27 font-size=%2716%27 font-weight=%27bold%27 fill=%27%23E63946%27 text-anchor=%27middle%27>A</text></svg>">
+<style>
+:root{--bg:#f5f5f7;--surface:#fff;--surface2:#f0f0f2;--border:#e0e0e4;--text:#1d1d1f;--text2:#8e8e93;--accent:#E63946;--accent2:#c62a36;--accent-bg:rgba(230,57,70,.12);--radius:10px;--shadow:0 .5px 2px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.header{background:linear-gradient(180deg,#1a1a1a 0%,#2d2d2d 100%);padding:0 0 10px 0;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.2)}
+.header-top{display:flex;align-items:center;gap:8px;padding:10px 14px 8px}
+.header-top h1{font-size:16px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.header-top h1 span{color:var(--accent)}
+.header-top .badge{font-size:10px;color:#98989d;background:rgba(255,255,255,.08);padding:1px 7px;border-radius:10px;margin-left:2px}
+.search-wrap{position:relative;margin:0 14px}
+.search-wrap .icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#8e8e93;pointer-events:none}
+.search-bar{-webkit-appearance:none;appearance:none;width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:1px solid #4a4a4a;background:#3a3a3a;color:#f5f5f7;font-size:15px;outline:none;transition:border .2s,background .2s}
+.search-bar::placeholder{color:#8e8e93;font-size:14px}
+.search-bar:focus{border-color:var(--accent);background:#2a2a2a}
+.tabs{display:flex;gap:5px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;background:var(--bg)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:6px 13px;border-radius:16px;border:1px solid var(--border);background:var(--surface);font-size:12px;cursor:pointer;transition:all .2s;color:var(--text2);white-space:nowrap;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.tab:active{transform:scale(.95)}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.tab .cnt{font-size:10px;opacity:.65;margin-left:3px}
+.stats{font-size:12px;color:var(--text2);padding:8px 14px 6px;display:flex;justify-content:space-between;align-items:center}
+.grid{display:flex;flex-direction:column;gap:5px;padding:0 12px 60px}
+.item{display:flex;align-items:flex-start;gap:10px;background:var(--surface);border-radius:var(--radius);padding:10px 12px;border:1px solid var(--border);cursor:default;transition:border .15s,box-shadow .15s,transform .1s;touch-action:manipulation;animation:fadeIn .18s ease-out}
+.item:active{transform:scale(.98)}
+.keys{display:flex;gap:3px;flex-wrap:wrap;flex-shrink:0;max-width:140px}
+.key{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;background:linear-gradient(180deg,#2c2c2e 0%,#1d1d1f 100%);color:#f5f5f7;border-radius:4px;font-size:11px;font-weight:700;font-family:"SF Mono",Menlo,monospace;border-bottom:1.5px solid #000;letter-spacing:-.2px}
+.key.accent{background:linear-gradient(180deg,var(--accent) 0%,#b82330 100%);border-bottom-color:#8f1c25;color:#fff}
+.key.mod{font-size:9px;padding:0 4px;min-width:22px}
+.key.cmd{font-size:12px;padding:0 8px;min-width:32px;letter-spacing:0}
+.desc{flex:1;min-width:0;font-size:13px;line-height:1.4}
+.detail{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3}
+.no-results{text-align:center;padding:60px 20px;color:var(--text2)}
+.no-results svg{width:40px;height:40px;margin-bottom:10px;opacity:.35}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(245,245,247,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:200}
+.bottom-bar .info{font-size:11px;color:var(--text2)}
+.bottom-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation}
+.bottom-btn:active{opacity:.8}
+.bottom-btn svg{width:14px;height:14px}
+@media(prefers-color-scheme:dark){
+:root{--bg:#1c1c1e;--surface:#2c2c2e;--surface2:#3a3a3c;--border:#48484a;--text:#f5f5f7;--text2:#98989d;--accent-bg:rgba(230,57,70,.15);--shadow:0 .5px 2px rgba(0,0,0,.25),0 1px 4px rgba(0,0,0,.2)}
+.bottom-bar{background:rgba(28,28,30,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <h1><svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" rx="5" fill="%23E63946"/><text x="16" y="22" font-size="17" font-weight="bold" fill="%23fff" text-anchor="middle">A</text></svg>AutoCAD <span>2027</span><span class="badge" id="totalBadge">0</span></h1>
+  </div>
+  <form class="search-wrap" id="searchForm" autocomplete="off">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input class="search-bar" id="searchInput" type="search" placeholder="搜索别名或功能名称…" enterkeyhint="search">
+  </form>
+</div>
+<div class="tabs" id="tabsContainer"></div>
+<div class="stats"><span id="resultCount">全部</span></div>
+<div class="grid" id="grid"></div>
+<div class="no-results" id="noResults" style="display:none">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+  <div style="font-size:15px;font-weight:600;margin-bottom:3px">没有匹配的命令</div>
+  <div style="font-size:13px">换个关键词试试</div>
+</div>
+<div class="bottom-bar">
+  <span class="info" id="bottomInfo">全部</span>
+  <button class="bottom-btn" id="scrollTopBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    顶部
+  </button>
+</div>
+<script>
+const D=[
+  // ── 绘图工具 ──
+  {keys:["L"],desc:"直线",cat:"绘图工具",detail:"LINE - 创建直线段"},
+  {keys:["PL"],desc:"多段线",cat:"绘图工具",detail:"PLINE - 创建二维多段线"},
+  {keys:["C"],desc:"圆",cat:"绘图工具",detail:"CIRCLE - 创建圆形"},
+  {keys:["A"],desc:"圆弧",cat:"绘图工具",detail:"ARC - 创建圆弧"},
+  {keys:["REC"],desc:"矩形",cat:"绘图工具",detail:"RECTANG - 创建矩形多段线"},
+  {keys:["POL"],desc:"正多边形",cat:"绘图工具",detail:"POLYGON - 创建等边封闭多边形"},
+  {keys:["EL"],desc:"椭圆",cat:"绘图工具",detail:"ELLIPSE - 创建椭圆或椭圆弧"},
+  {keys:["SPL"],desc:"样条曲线",cat:"绘图工具",detail:"SPLINE - 创建样条曲线"},
+  {keys:["H"],desc:"图案填充",cat:"绘图工具",detail:"HATCH - 填充封闭区域"},
+  {keys:["GD"],desc:"渐变色填充",cat:"绘图工具",detail:"GRADIENT - 创建渐变色填充"},
+  {keys:["MT"],desc:"多行文字",cat:"绘图工具",detail:"MTEXT - 创建多行文字对象"},
+  {keys:["DT"],desc:"单行文字",cat:"绘图工具",detail:"TEXT - 创建单行文字"},
+  {keys:["B"],desc:"创建块",cat:"绘图工具",detail:"BLOCK - 将选定对象定义为块"},
+  {keys:["I"],desc:"插入块",cat:"绘图工具",detail:"INSERT - 将块或文件插入当前图形"},
+  {keys:["PO"],desc:"点",cat:"绘图工具",detail:"POINT - 创建点对象"},
+  {keys:["XL"],desc:"构造线",cat:"绘图工具",detail:"XLINE - 创建无限长辅助线"},
+  {keys:["ML"],desc:"多线",cat:"绘图工具",detail:"MLINE - 创建平行多线"},
+  {keys:["DIV"],desc:"定数等分",cat:"绘图工具",detail:"DIVIDE - 沿对象等距放置点"},
+  {keys:["ME"],desc:"定距等分",cat:"绘图工具",detail:"MEASURE - 按指定距离放置点"},
+  {keys:["DO"],desc:"圆环",cat:"绘图工具",detail:"DONUT - 创建实心圆环"},
+  {keys:["TABLE"],desc:"表格",cat:"绘图工具",detail:"创建空白表格对象"},
+
+  // ── 修改工具 ──
+  {keys:["CO"],desc:"复制",cat:"修改工具",detail:"COPY - 复制选定对象"},
+  {keys:["MI"],desc:"镜像",cat:"修改工具",detail:"MIRROR - 镜像选定对象"},
+  {keys:["AR"],desc:"阵列",cat:"修改工具",detail:"ARRAY - 创建对象矩形/路径/环形阵列"},
+  {keys:["O"],desc:"偏移",cat:"修改工具",detail:"OFFSET - 偏移复制对象"},
+  {keys:["M"],desc:"移动",cat:"修改工具",detail:"MOVE - 移动选定对象"},
+  {keys:["RO"],desc:"旋转",cat:"修改工具",detail:"ROTATE - 旋转选定对象"},
+  {keys:["SC"],desc:"缩放",cat:"修改工具",detail:"SCALE - 缩放选定对象"},
+  {keys:["TR"],desc:"修剪",cat:"修改工具",detail:"TRIM - 修剪多余对象"},
+  {keys:["EX"],desc:"延伸",cat:"修改工具",detail:"EXTEND - 延伸对象到边界"},
+  {keys:["S"],desc:"拉伸",cat:"修改工具",detail:"STRETCH - 拉伸选定对象"},
+  {keys:["LEN"],desc:"拉长",cat:"修改工具",detail:"LENGTHEN - 改变对象长度"},
+  {keys:["BR"],desc:"打断",cat:"修改工具",detail:"BREAK - 在指定点打断对象"},
+  {keys:["J"],desc:"合并",cat:"修改工具",detail:"JOIN - 合并相似对象为单一对象"},
+  {keys:["CHA"],desc:"倒角",cat:"修改工具",detail:"CHAMFER - 给对象加倒角"},
+  {keys:["F"],desc:"圆角",cat:"修改工具",detail:"FILLET - 给对象加圆角"},
+  {keys:["X"],desc:"分解",cat:"修改工具",detail:"EXPLODE - 将复合对象分解为部件"},
+  {keys:["E"],desc:"删除",cat:"修改工具",detail:"ERASE - 删除选定对象"},
+  {keys:["PE"],desc:"编辑多段线",cat:"修改工具",detail:"PEDIT - 编辑多段线及其顶点"},
+  {keys:["AL"],desc:"对齐",cat:"修改工具",detail:"ALIGN - 在2D/3D中对齐对象"},
+  {keys:["EXT"],desc:"拉伸实体",cat:"修改工具",detail:"EXTRUDE - 拉伸2D对象创建3D实体"},
+  {keys:["PRESSPULL"],desc:"按住并拖动",cat:"修改工具",detail:"在3D实体上推拉面"},
+
+  // ── 图层与属性 ──
+  {keys:["LA"],desc:"图层管理",cat:"图层与属性",detail:"LAYER - 管理图层和图层特性"},
+  {keys:["LAYOFF"],desc:"关闭图层",cat:"图层与属性",detail:"关闭选定对象所在图层"},
+  {keys:["LAYON"],desc:"打开所有图层",cat:"图层与属性",detail:"打开图形中的所有图层"},
+  {keys:["LAYISO"],desc:"隔离图层",cat:"图层与属性",detail:"隔离选定对象所在的图层"},
+  {keys:["LAYFRZ"],desc:"冻结图层",cat:"图层与属性",detail:"冻结选定对象所在图层"},
+  {keys:["LAYTHW"],desc:"解冻所有图层",cat:"图层与属性",detail:"解冻图形中的所有图层"},
+  {keys:["LAYLCK"],desc:"锁定图层",cat:"图层与属性",detail:"锁定选定对象所在图层"},
+  {keys:["LAYULK"],desc:"解锁图层",cat:"图层与属性",detail:"解锁选定对象所在图层"},
+  {keys:["MO"],desc:"属性面板",cat:"图层与属性",detail:"PROPERTIES - 打开对象特性面板"},
+  {keys:["MA"],desc:"特性匹配",cat:"图层与属性",detail:"MATCHPROP - 将一个对象特性复制到其他对象"},
+  {keys:["CH"],desc:"特性修改",cat:"图层与属性",detail:"CHANGE - 修改选定对象特性"},
+  {keys:["COL"],desc:"颜色设置",cat:"图层与属性",detail:"COLOR - 设置新对象的默认颜色"},
+  {keys:["LT"],desc:"线型管理",cat:"图层与属性",detail:"LINETYPE - 加载和管理线型"},
+  {keys:["LW"],desc:"线宽设置",cat:"图层与属性",detail:"LWEIGHT - 设置线宽显示和默认值"},
+  {keys:["ADC"],desc:"设计中心",cat:"图层与属性",detail:"ADCENTER - 打开设计中心面板"},
+
+  // ── 标注与文字 ──
+  {keys:["DLI"],desc:"线性标注",cat:"标注与文字",detail:"DIMLINEAR - 创建水平或垂直标注"},
+  {keys:["DAL"],desc:"对齐标注",cat:"标注与文字",detail:"DIMALIGNED - 创建与对象对齐的标注"},
+  {keys:["DRA"],desc:"半径标注",cat:"标注与文字",detail:"DIMRADIUS - 标注圆或圆弧的半径"},
+  {keys:["DDI"],desc:"直径标注",cat:"标注与文字",detail:"DIMDIAMETER - 标注圆或圆弧的直径"},
+  {keys:["DAN"],desc:"角度标注",cat:"标注与文字",detail:"DIMANGULAR - 标注两直线间的角度"},
+  {keys:["DBA"],desc:"基线标注",cat:"标注与文字",detail:"DIMBASELINE - 从同一基线创建多个标注"},
+  {keys:["DCO"],desc:"连续标注",cat:"标注与文字",detail:"DIMCONTINUE - 创建连续式标注"},
+  {keys:["D"],desc:"标注样式",cat:"标注与文字",detail:"DIMSTYLE - 创建和修改标注样式"},
+  {keys:["DED"],desc:"编辑标注",cat:"标注与文字",detail:"DIMEDIT - 编辑标注文字和界线"},
+  {keys:["MT"],desc:"多行文字",cat:"标注与文字",detail:"MTEXT - 创建多行文字"},
+  {keys:["DT"],desc:"单行文字",cat:"标注与文字",detail:"TEXT - 创建单行文字"},
+  {keys:["ST"],desc:"文字样式",cat:"标注与文字",detail:"STYLE - 创建和修改文字样式"},
+  {keys:["ED"],desc:"文字编辑",cat:"标注与文字",detail:"DDEDIT - 编辑单行/多行文字"},
+  {keys:["SCALETEXT"],desc:"缩放文字",cat:"标注与文字",detail:"缩放选定文字对象的比例"},
+  {keys:["JUSTIFYTEXT"],desc:"对齐文字",cat:"标注与文字",detail:"修改选定文字对象的对齐方式"},
+
+  // ── 视图控制 ──
+  {keys:["Z"],desc:"缩放",cat:"视图控制",detail:"ZOOM - 实时缩放视口"},
+  {keys:["Z","A"],desc:"全部缩放",cat:"视图控制",detail:"显示图形界限内的所有对象"},
+  {keys:["Z","E"],desc:"范围缩放",cat:"视图控制",detail:"最大范围显示所有对象"},
+  {keys:["Z","W"],desc:"窗口缩放",cat:"视图控制",detail:"框选区域放大显示"},
+  {keys:["Z","P"],desc:"上一个缩放",cat:"视图控制",detail:"恢复上一个视图"},
+  {keys:["Z","O"],desc:"对象缩放",cat:"视图控制",detail:"缩放至选定对象"},
+  {keys:["P"],desc:"平移",cat:"视图控制",detail:"PAN - 实时平移视口"},
+  {keys:["V"],desc:"视图管理",cat:"视图控制",detail:"VIEW - 保存和恢复命名视图"},
+  {keys:["3DO"],desc:"三维动态观察",cat:"视图控制",detail:"3DORBIT - 在三维空间旋转视图"},
+  {keys:["VPORTS"],desc:"视口管理",cat:"视图控制",detail:"创建和管理视口配置"},
+  {keys:["DV"],desc:"动态视图",cat:"视图控制",detail:"DVIEW - 定义平行投影或透视视图"},
+  {keys:["SW"],desc:"西南等轴测",cat:"视图控制",detail:"切换到西南等轴测三维视图"},
+
+  // ── 功能键 (F1-F12) ──
+  {keys:["F1"],desc:"帮助文档",cat:"功能键",detail:"打开AutoCAD帮助系统"},
+  {keys:["F2"],desc:"文本窗口",cat:"功能键",detail:"切换命令行文本窗口显示"},
+  {keys:["F3"],desc:"对象捕捉",cat:"功能键",detail:"OSNAP - 切换对象捕捉模式"},
+  {keys:["F4"],desc:"三维对象捕捉",cat:"功能键",detail:"3DOSNAP - 切换三维对象捕捉"},
+  {keys:["F5"],desc:"等轴测平面",cat:"功能键",detail:"ISOPLANE - 切换等轴测平面方向"},
+  {keys:["F6"],desc:"UCS检测",cat:"功能键",detail:"切换动态UCS检测"},
+  {keys:["F7"],desc:"栅格显示",cat:"功能键",detail:"GRID - 切换栅格显示"},
+  {keys:["F8"],desc:"正交模式",cat:"功能键",detail:"ORTHO - 切换正交模式"},
+  {keys:["F9"],desc:"捕捉模式",cat:"功能键",detail:"SNAP - 切换栅格捕捉"},
+  {keys:["F10"],desc:"极轴追踪",cat:"功能键",detail:"POLAR - 切换极轴追踪"},
+  {keys:["F11"],desc:"对象捕捉追踪",cat:"功能键",detail:"切换对象捕捉追踪"},
+  {keys:["F12"],desc:"动态输入",cat:"功能键",detail:"切换动态输入模式"},
+
+  // ── Ctrl 快捷键 ──
+  {keys:["Ctrl","N"],desc:"新建图形",cat:"Ctrl组合键",detail:"创建新图形文件"},
+  {keys:["Ctrl","O"],desc:"打开文件",cat:"Ctrl组合键",detail:"打开现有图形文件"},
+  {keys:["Ctrl","S"],desc:"保存",cat:"Ctrl组合键",detail:"保存当前图形"},
+  {keys:["Ctrl","Shift","S"],desc:"另存为",cat:"Ctrl组合键",detail:"另存当前图形为新文件"},
+  {keys:["Ctrl","P"],desc:"打印",cat:"Ctrl组合键",detail:"PLOT - 打印当前图形"},
+  {keys:["Ctrl","Q"],desc:"退出",cat:"Ctrl组合键",detail:"退出AutoCAD"},
+  {keys:["Ctrl","Z"],desc:"撤销",cat:"Ctrl组合键",detail:"UNDO - 撤销上一步操作"},
+  {keys:["Ctrl","Y"],desc:"重做",cat:"Ctrl组合键",detail:"REDO - 重做已撤销操作"},
+  {keys:["Ctrl","X"],desc:"剪切",cat:"Ctrl组合键",detail:"CUTCLIP - 剪切对象到剪贴板"},
+  {keys:["Ctrl","C"],desc:"复制",cat:"Ctrl组合键",detail:"COPYCLIP - 复制对象到剪贴板"},
+  {keys:["Ctrl","V"],desc:"粘贴",cat:"Ctrl组合键",detail:"PASTECLIP - 从剪贴板粘贴"},
+  {keys:["Ctrl","1"],desc:"属性面板",cat:"Ctrl组合键",detail:"PROPERTIES - 打开特性面板"},
+  {keys:["Ctrl","2"],desc:"设计中心",cat:"Ctrl组合键",detail:"ADCENTER - 打开设计中心"},
+  {keys:["Ctrl","3"],desc:"工具选项板",cat:"Ctrl组合键",detail:"TOOLPALETTES - 打开工具选项板"},
+  {keys:["Ctrl","8"],desc:"快速计算器",cat:"Ctrl组合键",detail:"QUICKCALC - 打开计算器"},
+  {keys:["Ctrl","9"],desc:"命令行",cat:"Ctrl组合键",detail:"切换命令行窗口显示"},
+  {keys:["Ctrl","0"],desc:"全屏切换",cat:"Ctrl组合键",detail:"CLEANSCREEN - 切换全屏模式"},
+  {keys:["Ctrl","A"],desc:"全选",cat:"Ctrl组合键",detail:"SELECTALL - 选择图形中所有对象"},
+  {keys:["Ctrl","Shift","C"],desc:"复制到剪贴板",cat:"Ctrl组合键",detail:"COPYBASE - 带基点复制"},
+  {keys:["Ctrl","Shift","V"],desc:"粘贴为块",cat:"Ctrl组合键",detail:"PASTEBLOCK - 粘贴为块引用"},
+
+  // ── 工具与设置 ──
+  {keys:["OP"],desc:"选项设置",cat:"工具与设置",detail:"OPTIONS - 打开选项配置对话框"},
+  {keys:["UN"],desc:"单位设置",cat:"工具与设置",detail:"UNITS - 设置图形单位和精度"},
+  {keys:["LIMITS"],desc:"图形界限",cat:"工具与设置",detail:"设置图形栅格界限"},
+  {keys:["PURGE"],desc:"清理",cat:"工具与设置",detail:"清理图形中未使用项目"},
+  {keys:["AUDIT"],desc:"核查",cat:"工具与设置",detail:"检查并修复图形错误"},
+  {keys:["RECOVER"],desc:"修复",cat:"工具与设置",detail:"修复损坏的图形文件"},
+  {keys:["AP"],desc:"加载程序",cat:"工具与设置",detail:"APPLOAD - 加载AutoLISP应用程序"},
+  {keys:["ALIASEDIT"],desc:"别名编辑",cat:"工具与设置",detail:"编辑命令别名（pgp文件）"},
+  {keys:["CUI"],desc:"自定义界面",cat:"工具与设置",detail:"自定义用户界面"},
+  {keys:["VBAMAN"],desc:"VBA管理器",cat:"工具与设置",detail:"加载和管理VBA工程"},
+  {keys:["DS"],desc:"草图设置",cat:"工具与设置",detail:"DRAFTING - 设置捕捉/栅格/极轴等"},
+
+  // ── 选择与查询 ──
+  {keys:["DI"],desc:"距离测量",cat:"选择与查询",detail:"DIST - 测量两点间距离"},
+  {keys:["ID"],desc:"坐标查询",cat:"选择与查询",detail:"显示指定点的坐标值"},
+  {keys:["AREA"],desc:"面积测量",cat:"选择与查询",detail:"测量对象或定义区域的面积"},
+  {keys:["LI"],desc:"列表显示",cat:"选择与查询",detail:"LIST - 显示选定对象数据"},
+  {keys:["MASSPROP"],desc:"质量特性",cat:"选择与查询",detail:"计算三维对象质量特性"},
+  {keys:["QSELECT"],desc:"快速选择",cat:"选择与查询",detail:"按条件快速过滤选择对象"},
+  {keys:["TIME"],desc:"时间信息",cat:"选择与查询",detail:"显示图形编辑时间等信息"},
+  {keys:["STATUS"],desc:"状态信息",cat:"选择与查询",detail:"显示图形统计和模式状态"},
+  {keys:["SELECTSIMILAR"],desc:"选择类似",cat:"选择与查询",detail:"选择与选定对象属性相同的对象"},
+
+  // ── 打印与输出 ──
+  {keys:["PAGESETUP"],desc:"页面设置",cat:"打印与输出",detail:"配置打印页面布局"},
+  {keys:["PLOT"],desc:"打印",cat:"打印与输出",detail:"将图形输出到打印机或文件"},
+  {keys:["PUBLISH"],desc:"发布",cat:"打印与输出",detail:"批量发布图形到多页PDF"},
+  {keys:["EXPORT"],desc:"导出",cat:"打印与输出",detail:"将对象导出为其他格式"},
+  {keys:["PDF"],desc:"PDF导出",cat:"打印与输出",detail:"将图形输出为PDF文件"},
+  {keys:["JPGOUT"],desc:"JPG导出",cat:"打印与输出",detail:"将图形输出为JPEG图像"},
+  {keys:["PNGOUT"],desc:"PNG导出",cat:"打印与输出",detail:"将图形输出为PNG图像"},
+  {keys:["3DDWF"],desc:"3D DWF发布",cat:"打印与输出",detail:"发布三维模型为DWF文件"},
+
+  // ── 三维工具 ──
+  {keys:["3DO"],desc:"动态观察",cat:"三维工具",detail:"3DORBIT - 三维自由动态观察"},
+  {keys:["EXT"],desc:"拉伸建模",cat:"三维工具",detail:"EXTRUDE - 拉伸创建三维实体"},
+  {keys:["REV"],desc:"旋转建模",cat:"三维工具",detail:"REVOLVE - 旋转创建三维实体"},
+  {keys:["LOFT"],desc:"放样",cat:"三维工具",detail:"LOFT - 在横截面间放样创建实体"},
+  {keys:["SWEEP"],desc:"扫掠",cat:"三维工具",detail:"沿路径扫掠对象创建实体"},
+  {keys:["PRESS"],desc:"按住/拖动",cat:"三维工具",detail:"PRESSPULL - 推拉三维面"},
+  {keys:["UNI"],desc:"并集",cat:"三维工具",detail:"UNION - 合并三维实体"},
+  {keys:["SU"],desc:"差集",cat:"三维工具",detail:"SUBTRACT - 从实体减去相交部分"},
+  {keys:["IN"],desc:"交集",cat:"三维工具",detail:"INTERSECT - 保留实体重叠部分"},
+  {keys:["SL"],desc:"剖切",cat:"三维工具",detail:"SLICE - 沿平面剖切实体"},
+  {keys:["3A"],desc:"三维阵列",cat:"三维工具",detail:"3DARRAY - 创建三维矩形/环形阵列"},
+  {keys:["3M"],desc:"三维镜像",cat:"三维工具",detail:"3DMIRROR - 沿镜像平面三维镜像"},
+  {keys:["3R"],desc:"三维旋转",cat:"三维工具",detail:"3DROTATE - 绕轴三维旋转"},
+  {keys:["3S"],desc:"三维缩放",cat:"三维工具",detail:"3DSCALE - 三维均匀缩放"},
+  {keys:["3F"],desc:"三维面",cat:"三维工具",detail:"3DFACE - 创建三维曲面"},
+];
+let A="全部",Q="";
+const C=[...new Set(D.map(s=>s.cat))].sort((a,b)=>D.filter(x=>x.cat===b).length-D.filter(x=>x.cat===a).length);
+function rK(k,m){let c="key";if(k==="Ctrl"||k==="Shift")c+=" mod";else if(k==="F1"||k==="F2"||k==="F3"||k==="F4"||k==="F5"||k==="F6"||k==="F7"||k==="F8"||k==="F9"||k==="F10"||k==="F11"||k==="F12")c+=" accent";else if(k.length>=3)c+=" cmd";else if(m)c+=" accent";return `<span class="${c}">${k}</span>`}
+function rI(s){return `<div class="item"><div class="keys">${s.keys.map(k=>rK(k,s.keys.length>1)).join("")}</div><div class="desc">${s.desc}<div class="detail">${s.detail||""}</div></div></div>`}
+function rA(){const g=document.getElementById("grid"),n=document.getElementById("noResults"),r=document.getElementById("resultCount"),b=document.getElementById("bottomInfo");let i=D;A!=="全部"&&(i=i.filter(s=>s.cat===A));if(Q.trim()){const q=Q.trim().toLowerCase();i=i.filter(s=>(s.desc+" "+s.keys.join(" ")+" "+(s.detail||"")).toLowerCase().includes(q))}g.innerHTML=i.map(rI).join("");n.style.display=i.length?"none":"block";const t=A==="全部"?`共 ${i.length} 条`:`${A} · ${i.length} 条`;r.textContent=t;b.textContent=t}
+function rT(){const c=document.getElementById("tabsContainer"),ac=D.length;let h=`<div class="tab${A==="全部"?" active":""}" data-cat="全部">全部<span class="cnt">${ac}</span></div>`;C.forEach(cat=>{const cnt=D.filter(s=>s.cat===cat).length;h+=`<div class="tab${A===cat?" active":""}" data-cat="${cat}">${cat}<span class="cnt">${cnt}</span></div>`});c.innerHTML=h;c.querySelectorAll(".tab").forEach(el=>{el.addEventListener("click",()=>{A=el.dataset.cat;rT();rA()})})}
+document.getElementById("totalBadge").textContent=D.length;
+const si=document.getElementById("searchInput");si.addEventListener("input",()=>{Q=si.value;rA()});document.getElementById("searchForm").addEventListener("submit",e=>e.preventDefault());
+document.getElementById("scrollTopBtn").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+rT();rA();
+</script>
+</body>
+</html>
